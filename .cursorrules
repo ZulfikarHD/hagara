@@ -1,0 +1,35 @@
+im creating working in a job to build a company profile website, for a cunstruction service, im using inertia-vue-ts-laravel
+for now im focusing on creating the front end first, so fill the data with just dummy data first and for the routing just using render only,
+this is the style guide for my app :
+1. Color Composition using tailwindcss
+- Primary Colors:
+    - Dark Blue : Conveys professionalism and reliability.
+    - Deep Orange : Adds energy and reflects construction-related themes (e.g., machinery, bricks).
+    - Steel Gray : Represents durability and construction materials.
+- Secondary Colors:
+    - Light Gray : Clean and modern background color.
+    - Neutral Beige : Adds warmth and avoids sterile looks.
+- Accent Colors:
+    - Golden Yellow : Highlights key elements like CTAs.
+    - Soft Green : Optional for eco-friendly or sustainability messages.
+2. The Feel or theme i want :
+    - Premium & Professional Feel
+    - Smooth, deliberate animations that feel "weighted" and professional
+    - High-contrast, clean typography
+    - Generous whitespace
+    - Premium imagery with consistent color grading
+    - Modern Interaction Design
+    - Scroll-Based Reveals: Elements gracefully appear as you scroll
+    - Parallax Effects: Subtle depth through layered movement
+    - Hover States: Refined, smooth transitions that feel intentional
+    - Text Animations: Words and headlines that smoothly fade and slide in
+    - Visual Hierarchy
+    - Clear section transitions
+    - Strong contrast between text and backgrounds
+    - Strategic use of scale to emphasize important elements
+    - Motion Design Principles
+    - Timing: Slower, more deliberate animations (700ms-1500ms)
+    - Easing: Smooth acceleration/deceleration (power4.out)
+    - Staggering: Elements animate in sequence, not all at once
+    - Depth: Using parallax and scale to create visual layers
+6. always check for case sensitive when referencing, naming the component, vue file, and the tailwindcss class.
