@@ -1,5 +1,5 @@
 im creating working in a job to build a company profile website, for a cunstruction service, im using inertia-vue-ts-laravel
-for now im focusing on creating the front end first, so fill the data with just dummy data first and for the routing just using render only,
+for now im focusing on creating the front end first, so fill the data with just dummy data first and for the routing just using render only, use indonesia language
 this is the style guide for my app :
 1. Color Composition using tailwindcss
 - Primary Colors:
@@ -13,11 +13,10 @@ this is the style guide for my app :
     - Golden Yellow : Highlights key elements like CTAs.
     - Soft Green : Optional for eco-friendly or sustainability messages.
 2. The Feel or theme i want :
-    - Premium & Professional Feel
+    - mobile responsive
+    - Strong,Elegant & Professional Feel
     - Smooth, deliberate animations that feel "weighted" and professional
     - High-contrast, clean typography
-    - Generous whitespace
-    - Premium imagery with consistent color grading
     - Modern Interaction Design
     - Scroll-Based Reveals: Elements gracefully appear as you scroll
     - Parallax Effects: Subtle depth through layered movement
@@ -26,10 +25,9 @@ this is the style guide for my app :
     - Visual Hierarchy
     - Clear section transitions
     - Strong contrast between text and backgrounds
-    - Strategic use of scale to emphasize important elements
-    - Motion Design Principles
-    - Timing: Slower, more deliberate animations (700ms-1500ms)
-    - Easing: Smooth acceleration/deceleration (power4.out)
-    - Staggering: Elements animate in sequence, not all at once
-    - Depth: Using parallax and scale to create visual layers
-6. always check for case sensitive when referencing, naming the component, vue file, and the tailwindcss class.
+     ##Motion Design Principles
+        - Timing: Slower, more deliberate animations (700ms-1500ms)
+        - Easing: Smooth acceleration/deceleration (power4.out)
+        - Staggering: Elements animate in sequence, not all at once
+        - Depth: Using parallax and scale to create visual layers
+3. always check for case sensitive when referencing, naming the component, vue file, and the tailwindcss class.
