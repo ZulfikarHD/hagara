@@ -23,7 +23,7 @@ onMounted(() => {
   });
 
   // Animate service cards with better staggering
-  const cards = gsap.utils.toArray('.service-card');
+  const cards = gsap.utils.toArray('.service-card') as HTMLElement[];
   cards.forEach((card, index) => {
     gsap.from(card, {
       scrollTrigger: {

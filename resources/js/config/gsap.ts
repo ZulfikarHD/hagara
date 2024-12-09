@@ -9,23 +9,29 @@ gsap.config({
   autoSleep: 60,
   force3D: true,
   nullTargetWarn: false,
+  autoKillThreshold: 1
 });
 
 // Default animation settings
 export const defaultAnimationSettings = {
-  duration: 1,
-  ease: 'power4.out',
+  duration: 1.2,
+  ease: "power3.out",
   opacity: 0,
   y: 30,
+  stagger: {
+    amount: 0.4,
+    ease: "power2.out"
+  }
 };
 
 // ScrollTrigger default settings
 export const defaultScrollTriggerSettings = {
-  start: 'top center+=100',
-  toggleActions: 'play none none reverse',
-  markers: process.env.NODE_ENV === 'development', // Only show markers in development
-  once: false,
-  invalidateOnRefresh: true,
+  start: "top 80%",
+  end: "bottom 20%",
+  toggleActions: "play none none reverse",
+  markers: false,
+  scrub: false,
+  anticipatePin: 1
 };
 
 export { gsap, ScrollTrigger };

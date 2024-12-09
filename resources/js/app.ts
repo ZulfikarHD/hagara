@@ -5,8 +5,16 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+gsap.config({
+    autoSleep: 60,
+    force3D: true,
+    nullTargetWarn: false,
+});
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

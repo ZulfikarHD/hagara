@@ -1,40 +1,87 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-onMounted(() => {
-  // Animate section title
-  gsap.from('.section-title', {
-    scrollTrigger: {
-      trigger: '.project-section',
-      start: 'top center+=100',
-    },
-    y: 50,
-    opacity: 0,
-    duration: 1,
-    ease: 'power4.out'
-  });
+const sectionRef = ref<HTMLElement | null>(null);
 
-  // Animate project cards
-  gsap.from('.project-card', {
-    scrollTrigger: {
-      trigger: '.project-grid',
-      start: 'top center+=100',
-    },
-    y: 100,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.2,
-    ease: 'power4.out'
+onMounted(() => {
+  if (!sectionRef.value) return;
+
+  nextTick(() => {
+    try {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.value,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
+          markers: false,
+          scrub: 0.5
+        }
+      });
+
+      // Smoother title animation with longer duration
+      tl.from('.section-title', {
+        y: 80,
+        opacity: 0,
+        duration: 1.8,
+        ease: "power2.out",
+        clearProps: "all"
+      })
+
+      // Smoother card animations with better stagger and longer duration
+      .from('.project-card', {
+        y: 100,
+        opacity: 0,
+        scale: 0.95,
+        duration: 1.8,
+        stagger: {
+          amount: 1.2,
+          ease: "power2.inOut"
+        },
+        ease: "power2.out",
+        clearProps: "all"
+      }, "-=1.2");
+
+      // Smoother hover animations
+      gsap.utils.toArray('.project-card').forEach((card: any) => {
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card, {
+            y: -15,
+            scale: 1.03,
+            duration: 0.8,
+            ease: "power2.out"
+          });
+        });
+
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: "power2.inOut"
+          });
+        });
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      };
+    } catch (error) {
+      console.error('Animation setup failed:', error);
+    }
   });
 });
 </script>
 
 <template>
-  <section class="project-section bg-gray-50 py-16 lg:py-24">
+  <section
+    ref="sectionRef"
+    class="project-section bg-gray-50 py-16 lg:py-24"
+  >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <!-- Section Header -->
       <div class="section-title text-center">
@@ -124,14 +171,31 @@ onMounted(() => {
 
 <style scoped>
 .project-card {
-  transition: all 0.3s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-5px);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .project-card img {
-  transition: transform 0.7s ease;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover img {
+  transform: scale(1.08);
+}
+
+.project-card .gradient-overlay {
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    transition: none;
+  }
+
+  .project-card img {
+    transition: none;
+  }
 }
 </style>
