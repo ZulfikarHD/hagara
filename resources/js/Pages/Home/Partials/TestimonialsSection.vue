@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const sectionRef = ref<HTMLElement | null>(null);
 const isVisible = ref(false);
@@ -33,73 +29,42 @@ const testimonials = [
   }
 ];
 
+const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      isVisible.value = true;
+      // Trigger animations when section becomes visible
+      const title = document.querySelector('.section-title');
+      const cards = document.querySelectorAll('.testimonial-card');
+      const badge = document.querySelector('.trust-badge');
+
+      title?.classList.add('animate__animated', 'animate__fadeInUp');
+
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add('animate__animated', 'animate__fadeInUp');
+        }, index * 200); // Stagger effect
+      });
+
+      setTimeout(() => {
+        badge?.classList.add('animate__animated', 'animate__fadeInUp');
+      }, cards.length * 200);
+    }
+  });
+};
+
 onMounted(() => {
-  // Set initial visibility
-  isVisible.value = true;
+  const observer = new IntersectionObserver(handleIntersection, {
+    threshold: 0.2,
+    rootMargin: '50px'
+  });
 
-  // Make sure the section is mounted
-  if (!sectionRef.value) {
-    console.error('Section reference not found');
-    return;
-  }
-
-  try {
-    // Updated timeline with smoother easing
-    const tl = gsap.timeline({
-      defaults: {
-        duration: 1.2, // Increased duration for smoother feel
-        ease: 'power4.out' // Changed to power4 for smoother deceleration
-      }
-    });
-
-    // Enhanced scroll trigger with smoother toggleActions
-    ScrollTrigger.create({
-      trigger: sectionRef.value,
-      start: 'top 80%',
-      toggleActions: 'play pause resume reverse', // Smoother state management
-      onEnter: () => {
-        tl.play();
-      },
-      onLeaveBack: () => {
-        tl.reverse();
-      }
-    });
-
-    // Refined animation sequence
-    tl.fromTo('.section-title',
-      { y: 70, opacity: 0 },
-      { y: 0, opacity: 1 }
-    ).fromTo('.testimonial-card',
-      { y: 70, opacity: 0, scale: 0.95 }, // Added scale for depth
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        stagger: {
-          amount: 0.8, // Increased stagger time
-          ease: 'power2.out'
-        },
-      },
-      '-=0.6'
-    ).fromTo('.trust-badge',
-      { y: 40, opacity: 0, scale: 0.95 },
-      { y: 0, opacity: 1, scale: 1 },
-      '-=0.4'
-    );
-
-    // Pause timeline initially
-    tl.pause();
-
-  } catch (error) {
-    console.error('Animation setup failed:', error);
-    // Fallback to basic visibility
-    isVisible.value = true;
+  if (sectionRef.value) {
+    observer.observe(sectionRef.value);
   }
 
   // Cleanup
-  return () => {
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-  };
+  return () => observer.disconnect();
 });
 </script>
 
@@ -168,21 +133,26 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import 'animate.css';
+
 .testimonials-section {
   opacity: 1;
   transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .testimonial-card {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-  transform: translateZ(0); /* Force GPU acceleration */
-  will-change: transform, opacity; /* Optimize animations */
+  opacity: 0;
+}
+
+.animate__animated {
+  --animate-duration: 1.2s;
+  --animate-delay: 0s;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .testimonial-card {
-    transition: none;
+  .animate__animated {
+    animation: none !important;
+    opacity: 1 !important;
   }
 }
 </style>

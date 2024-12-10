@@ -1,79 +1,49 @@
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { onMounted, ref } from 'vue';
+import 'animate.css';
 
 const sectionRef = ref<HTMLElement | null>(null);
+const isVisible = ref(false);
+
+const observeElements = () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate__animated');
+
+        if (entry.target.classList.contains('section-title')) {
+          entry.target.classList.add('animate__fadeInUp');
+        }
+
+        if (entry.target.classList.contains('project-card')) {
+          entry.target.classList.add('animate__fadeInUp');
+          // Menambahkan delay untuk efek stagger
+          const index = Array.from(document.querySelectorAll('.project-card')).indexOf(entry.target);
+          (entry.target as HTMLElement).style.animationDelay = `${index * 0.2}s`;
+        }
+      }
+    });
+  }, {
+    threshold: 0.2,
+    rootMargin: '50px'
+  });
+
+  // Observe title
+  const title = document.querySelector('.section-title');
+  if (title) observer.observe(title);
+
+  // Observe cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    observer.observe(card);
+  });
+
+  return observer;
+};
 
 onMounted(() => {
-  if (!sectionRef.value) return;
+  const observer = observeElements();
 
-  nextTick(() => {
-    try {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.value,
-          start: "top 80%",
-          end: "bottom 20%",
-          toggleActions: "play none none reverse",
-          markers: false,
-          scrub: 0.5
-        }
-      });
-
-      // Smoother title animation with longer duration
-      tl.from('.section-title', {
-        y: 80,
-        opacity: 0,
-        duration: 1.8,
-        ease: "power2.out",
-        clearProps: "all"
-      })
-
-      // Smoother card animations with better stagger and longer duration
-      .from('.project-card', {
-        y: 100,
-        opacity: 0,
-        scale: 0.95,
-        duration: 1.8,
-        stagger: {
-          amount: 1.2,
-          ease: "power2.inOut"
-        },
-        ease: "power2.out",
-        clearProps: "all"
-      }, "-=1.2");
-
-      // Smoother hover animations
-      gsap.utils.toArray('.project-card').forEach((card: any) => {
-        card.addEventListener('mouseenter', () => {
-          gsap.to(card, {
-            y: -15,
-            scale: 1.03,
-            duration: 0.8,
-            ease: "power2.out"
-          });
-        });
-
-        card.addEventListener('mouseleave', () => {
-          gsap.to(card, {
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: "power2.inOut"
-          });
-        });
-      });
-
-      return () => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      };
-    } catch (error) {
-      console.error('Animation setup failed:', error);
-    }
-  });
+  return () => observer.disconnect();
 });
 </script>
 
@@ -171,10 +141,13 @@ onMounted(() => {
 
 <style scoped>
 .project-card {
-  will-change: transform, opacity;
+  will-change: transform;
   backface-visibility: hidden;
   transform: translateZ(0);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover {
+  transform: translateY(-15px);
 }
 
 .project-card img {
@@ -185,11 +158,21 @@ onMounted(() => {
   transform: scale(1.08);
 }
 
-.project-card .gradient-overlay {
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+/* Mengatur durasi animasi sesuai dengan style guide */
+.animate__animated {
+  animation-duration: 1.2s !important;
+}
+
+/* Menambahkan smooth easing */
+.animate__fadeInUp {
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate__animated {
+    animation: none !important;
+  }
+
   .project-card {
     transition: none;
   }

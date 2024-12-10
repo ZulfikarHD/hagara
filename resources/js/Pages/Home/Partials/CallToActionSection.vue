@@ -1,48 +1,37 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { onMounted, ref } from 'vue';
 
-gsap.registerPlugin(ScrollTrigger);
+const isVisible = ref(false);
 
 onMounted(() => {
-  // Animate the entire section
-  gsap.from('.cta-section', {
-    scrollTrigger: {
-      trigger: '.cta-section',
-      start: 'top center+=100',
-      toggleActions: 'play none none reverse'
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    ease: 'power4.out'
-  });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        isVisible.value = true;
+      }
+    });
+  }, { threshold: 0.1 });
 
-  // Animate content elements
-  gsap.from('.cta-content > *', {
-    scrollTrigger: {
-      trigger: '.cta-content',
-      start: 'top center+=100',
-    },
-    y: 30,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.2,
-    ease: 'power4.out'
-  });
+  const section = document.querySelector('.cta-section');
+  if (section) observer.observe(section);
 });
 </script>
 
 <template>
-  <section class="cta-section relative overflow-hidden bg-blue-900 py-16 sm:py-24">
+  <section
+    class="cta-section relative overflow-hidden bg-blue-900 py-16 sm:py-24"
+    :class="{ 'animate__animated animate__fadeIn': isVisible }"
+  >
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
       <div class="h-full w-full" style="background-image: url('/images/pattern.svg');"></div>
     </div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="cta-content mx-auto max-w-3xl text-center">
+      <div
+        class="cta-content mx-auto max-w-3xl text-center"
+        :class="{ 'animate__animated animate__fadeInUp animate__delay-1s': isVisible }"
+      >
         <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
           Siap Memulai Proyek Anda?
         </h2>
@@ -51,7 +40,10 @@ onMounted(() => {
           Hubungi kami sekarang untuk konsultasi gratis dan penawaran khusus untuk proyek konstruksi atau kebutuhan material Anda.
         </p>
 
-        <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div
+          class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          :class="{ 'animate__animated animate__fadeInUp animate__delay-2s': isVisible }"
+        >
           <a
             href="#contact"
             class="transform rounded-lg bg-orange-500 px-8 py-3 text-lg font-semibold text-white transition duration-500 ease-in-out hover:-translate-y-1 hover:bg-orange-400 hover:shadow-lg"
@@ -71,7 +63,10 @@ onMounted(() => {
           </a>
         </div>
 
-        <p class="mt-8 text-sm text-blue-200">
+        <p
+          class="mt-8 text-sm text-blue-200"
+          :class="{ 'animate__animated animate__fadeIn animate__delay-3s': isVisible }"
+        >
           Jam Operasional: Senin - Jumat (08.00 - 17.00 WIB)
         </p>
       </div>
@@ -79,7 +74,14 @@ onMounted(() => {
   </section>
 </template>
 
-<style scoped>
+<style>
+@import 'animate.css';
+
+.animate__animated {
+  --animate-duration: 1.2s;
+  --animate-delay: 0.5s;
+}
+
 .cta-section {
   background-image: linear-gradient(to bottom right, rgba(30, 58, 138, 0.95), rgba(30, 58, 138, 0.98));
 }

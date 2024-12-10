@@ -1,45 +1,38 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { onMounted, ref } from 'vue';
 
-gsap.registerPlugin(ScrollTrigger);
+const isVisible = ref(false);
+const cards = ref<HTMLElement[]>([]);
+
+const observerCallback = (entries: IntersectionObserverEntry[]) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      if (entry.target.classList.contains('service-header')) {
+        isVisible.value = true;
+      } else {
+        const card = entry.target as HTMLElement;
+        const index = cards.value.indexOf(card);
+        setTimeout(() => {
+          card.classList.add('animate__animated', 'animate__fadeInUp');
+        }, index * 150); // Stagger effect
+      }
+    }
+  });
+};
 
 onMounted(() => {
-  // Animate section header
-  gsap.from('.service-header', {
-    scrollTrigger: {
-      trigger: '.service-section',
-      start: 'top 80%',
-      end: 'top 20%',
-      toggleActions: 'play none none reverse',
-      markers: false,
-      scrub: false
-    },
-    y: 60,
-    opacity: 0,
-    duration: 1,
-    ease: 'power3.out'
+  const observer = new IntersectionObserver(observerCallback, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
   });
 
-  // Animate service cards with better staggering
-  const cards = gsap.utils.toArray('.service-card') as HTMLElement[];
-  cards.forEach((card, index) => {
-    gsap.from(card, {
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 85%',
-        end: 'top 15%',
-        toggleActions: 'play none none reverse',
-        markers: false
-      },
-      y: 100,
-      opacity: 0,
-      duration: 0.8,
-      delay: index * 0.15,
-      ease: 'power3.out'
-    });
-  });
+  // Observe header
+  const header = document.querySelector('.service-header');
+  if (header) observer.observe(header);
+
+  // Observe cards
+  cards.value = Array.from(document.querySelectorAll('.service-card'));
+  cards.value.forEach(card => observer.observe(card));
 });
 </script>
 
@@ -47,7 +40,10 @@ onMounted(() => {
   <section class="service-section bg-gray-50 py-16 lg:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <!-- Section Header -->
-      <div class="service-header text-center">
+      <div
+        class="service-header text-center"
+        :class="{ 'animate__animated animate__fadeInDown': isVisible }"
+      >
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Layanan Kami
         </h2>
@@ -135,15 +131,34 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import 'animate.css';
+
 .service-card {
-  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.animate__animated {
+  opacity: 1;
+}
+
+.animate__fadeInUp {
+  --animate-duration: 800ms;
+}
+
+.animate__fadeInDown {
+  --animate-duration: 1000ms;
+}
+
+.service-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service-card:hover {
   transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .service-card a {
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
 }
 </style>
