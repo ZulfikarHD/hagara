@@ -9,6 +9,18 @@ Route::get('/', function () {
     return Inertia::render('Home/Index');
 });
 
+Route::get('/about', function () {
+    return Inertia::render('AboutUs/Index');
+});
+
+Route::get('/services', function () {
+    return Inertia::render('Services/Index');
+});
+
+Route::get('/portofolio', function () {
+    return Inertia::render('Portofolio/Index');
+});
+
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
 //         'canLogin' => Route::has('login'),

@@ -1,6 +1,7 @@
 im creating working in a job to build a company profile website, for a cunstruction service, im using inertia-vue-ts-laravel
 for now im focusing on creating the front end first, so fill the data with just dummy data first and for the routing just using render only, use indonesia language
 this is the style guide for my app :
+only use animate.css for the animation, dont use any other library for the animation
 1. Color Composition using tailwindcss
 - Primary Colors:
     - Dark Blue : Conveys professionalism and reliability.
