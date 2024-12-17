@@ -12,7 +12,7 @@ const quickLinks = [
   { name: 'Beranda', href: '/' },
   { name: 'Tentang Kami', href: '/about' },
   { name: 'Layanan', href: '/services' },
-  { name: 'Portofolio', href: '/portfolio' },
+  { name: 'Portofolio', href: '/portofolio' },
   { name: 'Blog', href: '/blog' }
 ];
 
